@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcode Scanner</title>
+<!-- Include Quagga.js -->
+<script src="https://cdn.jsdelivr.net/npm/quagga/dist/quagga.min.js"></script>
+</head>
+<body>
+<h1>Barcode Scanner</h1>
+<div id="barcode-scanner" style="width: 100%;"></div>
+<div id="barcode-result"></div> <!-- Container for displaying detected barcode number -->
+<script>
+// Initialize Quagga.js and configure it
+Quagga.init({
+  inputStream : {
+    name : "Live",
+    type : "LiveStream",
+    target: document.querySelector('#barcode-scanner')    // Or '#yourElement' (container)
+  },
+  decoder : {
+    readers : ["ean_reader"] // List of active readers, e.g. ['code_128_reader']
+  }
+}, function(err) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    console.log("Initialization finished. Ready to start");
+    Quagga.start();
+});
+
+// Add event listener for when a barcode is detected
+Quagga.onDetected(function(result) {
+    console.log("Barcode detected and processed : [" + result.codeResult.code + "]", result);
+    // Display the detected barcode number
+    document.getElementById('barcode-result').textContent = "Detected Barcode: " + result.codeResult.code;
+});
+</script>
+</body>
+</html>
