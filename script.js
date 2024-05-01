@@ -90,7 +90,7 @@ function sendBarcodeData(barcode) {
         resultCard.style.display = "block";
       } else {
         barcodeResultElement.textContent =
-          "No transaction found for this barcode.";
+        `No Book found for this barcode: ${barcode}.`;
       }
     })
     .catch((error) => {
@@ -99,7 +99,6 @@ function sendBarcodeData(barcode) {
     });
 }
 function issueBook(barcode) {
-
   const rollNumber = prompt("Please enter your Roll Number:");
   if (!rollNumber) {
     alert("Roll Number is required to issue a book.");
@@ -118,11 +117,14 @@ function issueBook(barcode) {
     dueDate: dueDate.toISOString().split("T")[0], // Format as YYYY-MM-DD
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbxl2Fopw-HBNssw2265SPcxFPugv91YuV2R0eqoooqxxxzLCBsNBuaIHmEYUX1a3oRMrQ/exec", {
-    method: "POST",
-    contentType: "application/json",
-    body: JSON.stringify(issueData),
-  })
+  fetch(
+    "https://script.google.com/macros/s/AKfycbxl2Fopw-HBNssw2265SPcxFPugv91YuV2R0eqoooqxxxzLCBsNBuaIHmEYUX1a3oRMrQ/exec",
+    {
+      method: "POST",
+      contentType: "application/json",
+      body: JSON.stringify(issueData),
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       console.log("Book issued successfully:", data);
