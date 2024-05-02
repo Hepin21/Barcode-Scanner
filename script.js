@@ -28,7 +28,8 @@ function startScanning(deviceId) {
     .decodeFromVideoDevice(deviceId, "scanner", (result, err) => {
       if (result) {
         console.log(result.text);
-        barcodeResultElement.textContent = "Barcode Detected"; // Display a success message
+        // barcodeResultElement.textContent = "Barcode Detected"; // Display a success message
+        barcodeResultElement.textContent = "Barcode Detected: " + result.text;
         sendBarcodeData(result.text); // Call your function with the scanned barcode
         stopScanning(); // Stop the scanning and hide the video element
       } else if (err && !(err instanceof ZXing.NotFoundException)) {
@@ -67,8 +68,8 @@ function sendBarcodeData(barcode) {
           const userDetails = data.users.find(
             (user) => user.Roll === transaction.IssueBy
           );
+          // <h3>Barcode : ${barcode}</h3>
           resultCard.innerHTML = `
-            <h3>Barcode : ${barcode}</h3>
             <p><b>Book Name</b> : ${transaction.BookName}</p>
             <p><b>Issued By</b> : ${
               userDetails ? userDetails.Name : "Unknown"
