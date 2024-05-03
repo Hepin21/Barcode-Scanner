@@ -9,13 +9,20 @@ window.addEventListener("load", () => {
   codeReader
     .listVideoInputDevices()
     .then((videoInputDevices) => {
-      if (videoInputDevices.length > 0) {
+      const backCamera = videoInputDevices.find((device) =>
+        device.label.toLowerCase().includes("back")
+      );
+      if (backCamera) {
+        selectedDeviceId = backCamera.deviceId;
+      } else if (videoInputDevices.length > 0) {
+        // Fall back to the default camera if a back camera is not explicitly found
         selectedDeviceId = videoInputDevices[0].deviceId;
-        startScanning(selectedDeviceId);
       } else {
         console.error("No video devices found.");
         barcodeResultElement.textContent = "No video devices found.";
+        return;
       }
+      startScanning(selectedDeviceId);
     })
     .catch((err) => {
       console.error(err);
@@ -28,7 +35,6 @@ function startScanning(deviceId) {
     .decodeFromVideoDevice(deviceId, "scanner", (result, err) => {
       if (result) {
         console.log(result.text);
-        // barcodeResultElement.textContent = "Barcode Detected"; // Display a success message
         barcodeResultElement.textContent = "Barcode Detected: " + result.text;
         sendBarcodeData(result.text); // Call your function with the scanned barcode
         stopScanning(); // Stop the scanning and hide the video element
